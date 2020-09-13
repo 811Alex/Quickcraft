@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "quickcraft",
+  "version": "${version}",
+  "name": "Quickcraft",
+  "description": "Craft recipes even faster!",
+  "authors": [
+    "Alex811"
+  ],
+  "contact": {
+    "website": "https://gflash.eu",
+    "repo": "https://github.com/811Alex/Quickcraft"
+  },
+  "license": "MIT",
+  "icon": "assets/quickcraft/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "eu.gflash.quickcraft.client.QuickcraftClient"
+    ],
+    "main": [
+      "eu.gflash.quickcraft.Quickcraft"
+    ]
+  },
+  "mixins": [
+    "quickcraft.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.9.3+build.207",
+    "fabric": "*",
+    "minecraft": "1.16.3"
+  }
+}

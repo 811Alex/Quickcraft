@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "eu.gflash.quickcraft.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+  ],
+  "client": [
+    "RecipeClickMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
