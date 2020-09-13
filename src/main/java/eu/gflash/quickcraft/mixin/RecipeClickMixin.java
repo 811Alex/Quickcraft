@@ -1,11 +1,13 @@
 package eu.gflash.quickcraft.mixin;
 
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookResults;
 import net.minecraft.client.gui.screen.recipebook.RecipeResultCollection;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
@@ -36,13 +38,16 @@ public abstract class RecipeClickMixin {
 	protected void craft(){
 		if(Screen.hasControlDown() && resultCollection != null && resultCollection.isCraftable(lastClickedRecipe)){
 			ClientPlayerEntity ply = getMinecraftClient().player;
+			ClientPlayerInteractionManager im = getMinecraftClient().interactionManager;
+			if(im == null || ply == null || getMinecraftClient().currentScreen == null) return;
 			PlayerInventory inv = ply.inventory;
 			ScreenHandler csh = ply.currentScreenHandler;
-			ClientPlayerInteractionManager im = getMinecraftClient().interactionManager;
 			if(csh instanceof CraftingScreenHandler || csh instanceof PlayerScreenHandler){
 				int resultSlotIndex = ((AbstractRecipeScreenHandler<?>) csh).getCraftingResultSlotIndex();
 				ItemStack outStack = csh.slots.get(resultSlotIndex).getStack();
-				if(!hasSpace(inv, outStack)){
+				InputUtil.Key keyDrop = KeyBindingHelper.getBoundKeyOf(getMinecraftClient().options.keyDrop);
+				Boolean dropPressed = getMinecraftClient().currentScreen.keyPressed(keyDrop.getCode(), 0, 0);
+				if(dropPressed || !hasSpace(inv, outStack)){
 					ply.dropSelectedItem(true);
 				}
 				im.clickSlot(csh.syncId, resultSlotIndex, 0, SlotActionType.QUICK_MOVE, ply);
