@@ -6,7 +6,9 @@ import net.minecraft.client.gui.screen.recipebook.RecipeBookResults;
 import net.minecraft.client.gui.screen.recipebook.RecipeResultCollection;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.screen.AbstractRecipeScreenHandler;
 import net.minecraft.screen.CraftingScreenHandler;
@@ -34,12 +36,21 @@ public abstract class RecipeClickMixin {
 	protected void craft(){
 		if(Screen.hasControlDown() && resultCollection != null && resultCollection.isCraftable(lastClickedRecipe)){
 			ClientPlayerEntity ply = getMinecraftClient().player;
+			PlayerInventory inv = ply.inventory;
 			ScreenHandler csh = ply.currentScreenHandler;
-			ClientPlayerInteractionManager im = MinecraftClient.getInstance().interactionManager;
+			ClientPlayerInteractionManager im = getMinecraftClient().interactionManager;
 			if(csh instanceof CraftingScreenHandler || csh instanceof PlayerScreenHandler){
 				int resultSlotIndex = ((AbstractRecipeScreenHandler<?>) csh).getCraftingResultSlotIndex();
+				ItemStack outStack = csh.slots.get(resultSlotIndex).getStack();
+				if(!hasSpace(inv, outStack)){
+					ply.dropSelectedItem(true);
+				}
 				im.clickSlot(csh.syncId, resultSlotIndex, 0, SlotActionType.QUICK_MOVE, ply);
 			}
 		}
+	}
+
+	protected boolean hasSpace(PlayerInventory inv, ItemStack outStack){
+		return outStack.isEmpty() || inv.getEmptySlot() >= 0 || inv.getOccupiedSlotWithRoomForStack(outStack) >= 0;
 	}
 }
