@@ -16,8 +16,6 @@ public class CraftingScreenHandlerMixin {
 
 	@Inject(method = "updateResult", at = @At("RETURN"))
 	private static void updateResult(int syncId, World world, PlayerEntity player, CraftingInventory craftingInventory, CraftingResultInventory resultInventory, CallbackInfo ci){
-		if(InventoryHelper.isValidResult(resultInventory)){	// resultInventory not empty & resultInventory == clicked recipe (the items get put in the crafting table gradually, we don't want any recipes that are craftable in-between)
-			InventoryHelper.scheduleCraft();
-		}
+		InventoryHelper.scheduleCraft();
 	}
 }

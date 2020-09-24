@@ -6,9 +6,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.CraftingResultInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Recipe;
 import net.minecraft.screen.AbstractRecipeScreenHandler;
 import net.minecraft.screen.CraftingScreenHandler;
 import net.minecraft.screen.PlayerScreenHandler;
@@ -16,12 +14,7 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.SlotActionType;
 
 public abstract class InventoryHelper {
-	private static Recipe<?> lastRecipe;
 	private static boolean craftScheduled = false;
-
-	public static void setLastRecipe(Recipe<?> lastRecipe) {
-		InventoryHelper.lastRecipe = lastRecipe;
-	}
 
 	public static void scheduleCraft(){	// craft on the next client tick
 		craftScheduled = true;
@@ -67,11 +60,6 @@ public abstract class InventoryHelper {
 		if(csh instanceof CraftingScreenHandler || csh instanceof PlayerScreenHandler)
 			return ((AbstractRecipeScreenHandler<?>) csh);
 		return null;
-	}
-
-	public static boolean isValidResult(CraftingResultInventory cri){	// is the recipe we clicked
-		if(cri.isEmpty()) return false;
-		return lastRecipe.getOutput().getItem().equals(cri.getStack(0).getItem());
 	}
 
 	protected static boolean hasSpace(PlayerInventory inv, ItemStack outStack){	// player inventory has space for items
