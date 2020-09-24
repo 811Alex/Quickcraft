@@ -16,6 +16,6 @@ public abstract class RecipeClickMixin {
 
 	@Inject(method = "mouseClicked", at = @At("RETURN"))
 	protected void mouseClicked(double mouseX, double mouseY, int button, int areaLeft, int areaTop, int areaWidth, int areaHeight, CallbackInfoReturnable<Boolean> cir){
-		InventoryHelper.lastRecipe = getLastClickedRecipe();
+		InventoryHelper.setLastRecipe(getLastClickedRecipe());
 	}
 }

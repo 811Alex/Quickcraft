@@ -16,8 +16,12 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.SlotActionType;
 
 public abstract class InventoryHelper {
-	public static Recipe<?> lastRecipe;
+	private static Recipe<?> lastRecipe;
 	private static boolean craftScheduled = false;
+
+	public static void setLastRecipe(Recipe<?> lastRecipe) {
+		InventoryHelper.lastRecipe = lastRecipe;
+	}
 
 	public static void scheduleCraft(){	// craft on the next client tick
 		craftScheduled = true;
