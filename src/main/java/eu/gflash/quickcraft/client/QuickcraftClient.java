@@ -8,6 +8,7 @@ import net.fabricmc.api.Environment;
 public class QuickcraftClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
+		InventoryHelper.init();
 		System.out.println("Quickcraft loaded!");
 	}
 }
