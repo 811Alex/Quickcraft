@@ -6,8 +6,7 @@
   "mixins": [
   ],
   "client": [
-    "CraftingScreenHandlerMixin",
-    "RecipeClickMixin"
+    "CraftingScreenHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
