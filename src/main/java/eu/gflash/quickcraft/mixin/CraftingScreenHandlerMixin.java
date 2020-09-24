@@ -1,6 +1,7 @@
 package eu.gflash.quickcraft.mixin;
 
 import eu.gflash.quickcraft.client.InventoryHelper;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.CraftingResultInventory;
@@ -16,6 +17,8 @@ public class CraftingScreenHandlerMixin {
 
 	@Inject(method = "updateResult", at = @At("RETURN"))
 	private static void updateResult(int syncId, World world, PlayerEntity player, CraftingInventory craftingInventory, CraftingResultInventory resultInventory, CallbackInfo ci){
-		InventoryHelper.scheduleCraft();
+		if(Screen.hasControlDown()) {
+			InventoryHelper.scheduleCraft();
+		}
 	}
 }
