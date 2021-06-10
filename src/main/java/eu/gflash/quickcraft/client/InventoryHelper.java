@@ -34,7 +34,7 @@ public abstract class InventoryHelper {
 		ClientPlayerEntity ply = client.player;
 		ClientPlayerInteractionManager im = client.interactionManager;
 		if(im == null || ply == null) return;
-		PlayerInventory inv = ply.inventory;
+		PlayerInventory inv = ply.getInventory();
 		AbstractRecipeScreenHandler<?> rsh = getRecipeScreenHandler();
 		if(rsh != null){
 			int resultSlotIndex = rsh.getCraftingResultSlotIndex();
