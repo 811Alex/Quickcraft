@@ -10,7 +10,9 @@
   ],
   "contact": {
     "website": "https://gflash.eu",
-    "repo": "https://github.com/811Alex/Quickcraft"
+    "sources": "https://github.com/811Alex/Quickcraft",
+    "issues": "https://github.com/811Alex/Quickcraft/issues",
+    "discord": "https://discord.gg/2drdphV292"
   },
   "license": "MIT",
   "icon": "assets/quickcraft/icon.png",
@@ -27,8 +29,16 @@
     "quickcraft.mixins.json"
   ],
   "depends": {
+    "java": ">=${javaVer}",
+    "minecraft": ">=1.21.2",
     "fabricloader": ">=0.11.3",
-    "fabric": "*",
-    "minecraft": ">=1.21.2"
+    "fabric": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/2drdphV292"
+      }
+    }
   }
 }
