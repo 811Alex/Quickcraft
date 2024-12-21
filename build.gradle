@@ -1,12 +1,11 @@
 plugins {
-    id 'fabric-loom' version '1.9-SNAPSHOT'
+    id 'fabric-loom' version "${loom_version}"
     id 'maven-publish'
 }
 
-def javaVer = JavaVersion.VERSION_21
-targetCompatibility = sourceCompatibility = javaVer
+def javaVer = project.java_version.toInteger()
+def modName = project.archives_base_name
 
-archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
@@ -21,42 +20,39 @@ processResources {
     inputs.property 'version', project.version
 
     filesMatching('fabric.mod.json') {
-        expand 'version': project.version
+        expand 'version': project.version, 'javaVer': javaVer
     }
 }
 
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = 'UTF-8'
-    it.options.release = javaVer.ordinal()
+    it.options.release = javaVer
 }
+
+base { archivesName = modName }
 
 java {
     withSourcesJar()
+    toolchain { languageVersion = JavaLanguageVersion.of(javaVer) }
 }
+
+loom {
+    runs { remove server }
+}
+
+configurations { runtimeClasspath.extendsFrom loomDevelopmentDependencies }
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}"}
+        rename { "${it}_${modName}"}
     }
 }
 
-// configure the maven publication
 publishing {
     publications {
-        mavenJava(MavenPublication) {
-            // add all the jars that should be included when publishing to maven
-            artifact(remapJar) {
-                builtBy remapJar
-            }
-            artifact(sourcesJar) {
-                builtBy remapSourcesJar
-            }
+        create("mavenJava", MavenPublication) {
+            artifactId = modName
+            from components.java
         }
-    }
-
-    // select the repositories you want to publish to
-    repositories {
-        // uncomment to publish to the local maven
-        // mavenLocal()
     }
 }
