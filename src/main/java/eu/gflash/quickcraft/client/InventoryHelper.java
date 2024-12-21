@@ -7,11 +7,12 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.AbstractRecipeScreenHandler;
+import net.minecraft.screen.AbstractCraftingScreenHandler;
 import net.minecraft.screen.CraftingScreenHandler;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.screen.slot.Slot;
 
 public abstract class InventoryHelper {
 	private static boolean craftScheduled = false;
@@ -35,9 +36,9 @@ public abstract class InventoryHelper {
 		ClientPlayerInteractionManager im = client.interactionManager;
 		if(im == null || ply == null) return;
 		PlayerInventory inv = ply.getInventory();
-		AbstractRecipeScreenHandler<?> rsh = getRecipeScreenHandler();
+		AbstractCraftingScreenHandler rsh = getCraftingScreenHandler();
 		if(rsh != null){
-			int resultSlotIndex = rsh.getCraftingResultSlotIndex();
+			int resultSlotIndex = rsh.getOutputSlot().getIndex();
 			ItemStack outStack = getResultStack();
 			if(Screen.hasAltDown() || (outStack != null && !hasSpace(inv, outStack))){
 				ply.dropSelectedItem(true);
@@ -47,18 +48,18 @@ public abstract class InventoryHelper {
 	}
 
 	public static ItemStack getResultStack(){ // crafting table result
-		AbstractRecipeScreenHandler<?> rsh = getRecipeScreenHandler();
+		AbstractCraftingScreenHandler rsh = getCraftingScreenHandler();
 		if(rsh == null) return null;
-		int resultSlotIndex = rsh.getCraftingResultSlotIndex();
+		int resultSlotIndex = rsh.getOutputSlot().getIndex();
 		return rsh.slots.get(resultSlotIndex).getStack();
 	}
 
-	public static AbstractRecipeScreenHandler<?> getRecipeScreenHandler(){	// get crafting area screen handler (table/player)
+	public static AbstractCraftingScreenHandler getCraftingScreenHandler(){	// get crafting area screen handler (table/player)
 		ClientPlayerEntity ply = MinecraftClient.getInstance().player;
 		if(ply == null) return null;
 		ScreenHandler csh = ply.currentScreenHandler;
 		if(csh instanceof CraftingScreenHandler || csh instanceof PlayerScreenHandler)
-			return ((AbstractRecipeScreenHandler<?>) csh);
+			return ((AbstractCraftingScreenHandler) csh);
 		return null;
 	}
 
