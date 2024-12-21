@@ -12,7 +12,6 @@ import net.minecraft.screen.CraftingScreenHandler;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.screen.slot.Slot;
 
 public abstract class InventoryHelper {
 	private static boolean craftScheduled = false;
