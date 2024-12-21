@@ -1,9 +1,9 @@
 plugins {
-    id 'fabric-loom' version '1.2-SNAPSHOT'
+    id 'fabric-loom' version '1.9-SNAPSHOT'
     id 'maven-publish'
 }
 
-def javaVer = JavaVersion.VERSION_17
+def javaVer = JavaVersion.VERSION_21
 targetCompatibility = sourceCompatibility = javaVer
 
 archivesBaseName = project.archives_base_name
