@@ -11,10 +11,11 @@ import net.minecraft.screen.CraftingScreenHandler;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.client.util.InputUtil;
 
 public abstract class InventoryHelper {
 	private static boolean craftScheduled = false;
+
+	private InventoryHelper() {}
 
 	public static void scheduleCraft(){	// craft on the next client tick
 		craftScheduled = true;
@@ -39,8 +40,7 @@ public abstract class InventoryHelper {
 		if(rsh != null){
 			int resultSlotIndex = rsh.getOutputSlot().getIndex();
 			ItemStack outStack = getResultStack();
-			boolean isAltDown = InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow(), InputUtil.GLFW_KEY_LEFT_ALT) || InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow(), InputUtil.GLFW_KEY_RIGHT_ALT) ;
-			if(isAltDown || (outStack != null && !hasSpace(inv, outStack))){
+			if(InputHelper.isAltPressed() || (outStack != null && !hasSpace(inv, outStack))){
 				ply.dropSelectedItem(true);
 			}
 			im.clickSlot(rsh.syncId, resultSlotIndex, 0, SlotActionType.QUICK_MOVE, ply);
