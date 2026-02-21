@@ -1,24 +1,23 @@
 package eu.gflash.quickcraft.client;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.client.util.Window;
-
+import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.platform.Window;
 import java.util.Arrays;
+import net.minecraft.client.Minecraft;
 
 public abstract class InputHelper {
     private InputHelper() {}
 
     public static boolean isKeyPressed(int ...keyCodes){
-        Window window = MinecraftClient.getInstance().getWindow();
-        return Arrays.stream(keyCodes).anyMatch(c -> InputUtil.isKeyPressed(window, c));
+        Window window = Minecraft.getInstance().getWindow();
+        return Arrays.stream(keyCodes).anyMatch(c -> InputConstants.isKeyDown(window, c));
     }
 
     public static boolean isAltPressed(){
-        return isKeyPressed(InputUtil.GLFW_KEY_LEFT_ALT, InputUtil.GLFW_KEY_RIGHT_ALT);
+        return isKeyPressed(InputConstants.KEY_LALT, InputConstants.KEY_RALT);
     }
 
     public static boolean isCtrlPressed(){
-        return isKeyPressed(InputUtil.GLFW_KEY_LEFT_CONTROL, InputUtil.GLFW_KEY_RIGHT_CONTROL);
+        return isKeyPressed(InputConstants.KEY_LCONTROL, InputConstants.KEY_RCONTROL);
     }
 }

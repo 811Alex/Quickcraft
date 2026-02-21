@@ -1,16 +1,16 @@
 package eu.gflash.quickcraft.client;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.AbstractCraftingScreenHandler;
-import net.minecraft.screen.CraftingScreenHandler;
-import net.minecraft.screen.PlayerScreenHandler;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.AbstractCraftingMenu;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.CraftingMenu;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.ItemStack;
 
 public abstract class InventoryHelper {
 	private static boolean craftScheduled = false;
@@ -22,7 +22,7 @@ public abstract class InventoryHelper {
 	}
 
 	public static void init(){	// register craft on tick
-		ClientTickEvents.START_CLIENT_TICK.register((MinecraftClient minecraftClient)->{
+		ClientTickEvents.START_CLIENT_TICK.register((Minecraft minecraftClient)->{
 			if(craftScheduled){
 				craftScheduled = false;
 				InventoryHelper.craft();
@@ -31,39 +31,39 @@ public abstract class InventoryHelper {
 	}
 
 	public static void craft(){	// craft the item on the crafting table
-		MinecraftClient client = MinecraftClient.getInstance();
-		ClientPlayerEntity ply = client.player;
-		ClientPlayerInteractionManager im = client.interactionManager;
+		Minecraft client = Minecraft.getInstance();
+		LocalPlayer ply = client.player;
+		MultiPlayerGameMode im = client.gameMode;
 		if(im == null || ply == null) return;
-		PlayerInventory inv = ply.getInventory();
-		AbstractCraftingScreenHandler rsh = getCraftingScreenHandler();
+		Inventory inv = ply.getInventory();
+		AbstractCraftingMenu rsh = getCraftingScreenHandler();
 		if(rsh != null){
-			int resultSlotIndex = rsh.getOutputSlot().getIndex();
+			int resultSlotIndex = rsh.getResultSlot().getContainerSlot();
 			ItemStack outStack = getResultStack();
 			if(InputHelper.isAltPressed() || (outStack != null && !hasSpace(inv, outStack))){
-				ply.dropSelectedItem(true);
+				ply.drop(true);
 			}
-			im.clickSlot(rsh.syncId, resultSlotIndex, 0, SlotActionType.QUICK_MOVE, ply);
+			im.handleInventoryMouseClick(rsh.containerId, resultSlotIndex, 0, ClickType.QUICK_MOVE, ply);
 		}
 	}
 
 	public static ItemStack getResultStack(){ // crafting table result
-		AbstractCraftingScreenHandler rsh = getCraftingScreenHandler();
+		AbstractCraftingMenu rsh = getCraftingScreenHandler();
 		if(rsh == null) return null;
-		int resultSlotIndex = rsh.getOutputSlot().getIndex();
-		return rsh.slots.get(resultSlotIndex).getStack();
+		int resultSlotIndex = rsh.getResultSlot().getContainerSlot();
+		return rsh.slots.get(resultSlotIndex).getItem();
 	}
 
-	public static AbstractCraftingScreenHandler getCraftingScreenHandler(){	// get crafting area screen handler (table/player)
-		ClientPlayerEntity ply = MinecraftClient.getInstance().player;
+	public static AbstractCraftingMenu getCraftingScreenHandler(){	// get crafting area screen handler (table/player)
+		LocalPlayer ply = Minecraft.getInstance().player;
 		if(ply == null) return null;
-		ScreenHandler csh = ply.currentScreenHandler;
-		if(csh instanceof CraftingScreenHandler || csh instanceof PlayerScreenHandler)
-			return ((AbstractCraftingScreenHandler) csh);
+		AbstractContainerMenu csh = ply.containerMenu;
+		if(csh instanceof CraftingMenu || csh instanceof InventoryMenu)
+			return ((AbstractCraftingMenu) csh);
 		return null;
 	}
 
-	protected static boolean hasSpace(PlayerInventory inv, ItemStack outStack){	// player inventory has space for items
-		return outStack.isEmpty() || inv.getEmptySlot() >= 0 || inv.getOccupiedSlotWithRoomForStack(outStack) >= 0;
+	protected static boolean hasSpace(Inventory inv, ItemStack outStack){	// player inventory has space for items
+		return outStack.isEmpty() || inv.getFreeSlot() >= 0 || inv.getSlotWithRemainingSpace(outStack) >= 0;
 	}
 }
