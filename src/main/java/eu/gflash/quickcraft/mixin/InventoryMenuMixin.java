@@ -10,8 +10,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(InventoryMenu.class)
-public class PlayerScreenHandlerMixin {
-
+public class InventoryMenuMixin {
     @Inject(method = "slotsChanged", at = @At("RETURN"))
     private void onContentChanged(Container inventory, CallbackInfo ci){
 		if(InputHelper.isCtrlPressed()) {

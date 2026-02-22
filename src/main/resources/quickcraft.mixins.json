@@ -6,8 +6,8 @@
   "mixins": [
   ],
   "client": [
-    "CraftingScreenHandlerMixin",
-    "PlayerScreenHandlerMixin"
+    "CraftingMenuMixin",
+    "InventoryMenuMixin"
   ],
   "injectors": {
     "defaultRequire": 1
