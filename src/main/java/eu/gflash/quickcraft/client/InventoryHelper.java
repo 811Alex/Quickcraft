@@ -7,7 +7,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.AbstractCraftingMenu;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.CraftingMenu;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
@@ -43,7 +43,7 @@ public abstract class InventoryHelper {
 			if(InputHelper.isAltPressed() || (outStack != null && !hasSpace(inv, outStack))){
 				ply.drop(true);
 			}
-			im.handleInventoryMouseClick(rsh.containerId, resultSlotIndex, 0, ClickType.QUICK_MOVE, ply);
+			im.handleContainerInput(rsh.containerId, resultSlotIndex, 0, ContainerInput.QUICK_MOVE, ply);
 		}
 	}
 
