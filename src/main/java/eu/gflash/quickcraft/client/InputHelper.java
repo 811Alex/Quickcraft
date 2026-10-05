@@ -10,7 +10,20 @@ public abstract class InputHelper {
 
     public static boolean isKeyPressed(int ...keyCodes){
         Window window = Minecraft.getInstance().getWindow();
-        return Arrays.stream(keyCodes).anyMatch(c -> InputConstants.isKeyDown(window, c));
+        return Arrays.stream(keyCodes).anyMatch(c -> isKeyDown(window, c));
+    }
+
+    private static boolean isKeyDown(Window window, int keyCode) {
+        try {
+            try {
+                return (boolean) InputConstants.class.getMethod("isKeyDown", int.class).invoke(null, keyCode);
+            } catch (NoSuchMethodException e) {
+                return (boolean) InputConstants.class.getMethod("isKeyDown", Window.class, int.class)
+                        .invoke(null, window, keyCode);
+            }
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException("Failed to check whether a key is pressed", e);
+        }
     }
 
     public static boolean isAltPressed(){
